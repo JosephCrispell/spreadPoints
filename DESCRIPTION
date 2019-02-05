@@ -1,8 +1,8 @@
 Package: spreadPoints
-Title: Add points onto boxplot that are symmetrically spread out to minimise overlap
+Title: Add points onto boxplot that are deterministically spread out to minimise overlap
 Version: 0.0.0.9000
 Authors@R: person("Joseph", "Crispell", email = "crispelljoseph@gmail.com", role = "cre")
-Description: Add points onto boxplot that are symmetrically spread out to minimise overlap. Similar to the stripchart() function.
+Description: Add points onto boxplot that are deterministically spread out to minimise overlap. Similar to the stripchart() function.
 Depends: R (>= 3.0.2)
 License: GPL-3
 Encoding: UTF-8

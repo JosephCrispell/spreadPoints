@@ -1,8 +1,8 @@
-# addTextLabels
+# spreadPoints
 ## Author: Joseph Crispell
 ## Repository created: 05-02-19
 ## Licence: GPL-3
-A function to add points onto boxplot that are symmetrically spread out to minimise overlap
+A function to add points onto boxplot that are deterministically spread out to minimise overlap
 
 Package can be directly installed into R using:
 ```
