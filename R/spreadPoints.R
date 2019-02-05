@@ -120,9 +120,9 @@ spreadPoints <- function(values, position, pointCex=1, col="black", pch=19, alph
       
       # Plot the points - check if horizontal plotting
       if(horiz){
-        points(x=values[indicesOfValuesInBins[[key]]], y=xPositions, pch=17, col=colour, xpd=xpd, cex=pointCex, pch=pch)
+        points(x=values[indicesOfValuesInBins[[key]]], y=xPositions, col=colour, xpd=xpd, cex=pointCex, pch=pch)
       }else{
-        points(x=xPositions, y=values[indicesOfValuesInBins[[key]]], pch=17, col=colour, xpd=xpd, cex=pointCex, pch=pch)
+        points(x=xPositions, y=values[indicesOfValuesInBins[[key]]], col=colour, xpd=xpd, cex=pointCex, pch=pch)
       }
       
       # Check if single point present  
@@ -130,9 +130,9 @@ spreadPoints <- function(values, position, pointCex=1, col="black", pch=19, alph
       
       # Plot the point - check if horizontal plotting
       if(horiz){
-        points(x=values[indicesOfValuesInBins[[key]][1]], y=position, pch=17, col=colour, xpd=xpd, cex=pointCex, pch=pch)
+        points(x=values[indicesOfValuesInBins[[key]][1]], y=position, col=colour, xpd=xpd, cex=pointCex, pch=pch)
       }else{
-        points(x=position, y=values[indicesOfValuesInBins[[key]][1]], pch=17, col=colour, xpd=xpd, cex=pointCex, pch=pch)
+        points(x=position, y=values[indicesOfValuesInBins[[key]][1]], col=colour, xpd=xpd, cex=pointCex, pch=pch)
       }
     }
   }
