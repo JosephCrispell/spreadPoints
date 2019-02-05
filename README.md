@@ -14,6 +14,9 @@ library(spreadPoints)
 
 Once installed test it out with the following code:
 ```
+# Set the seed
+set.seed(254534)
+
 # Generate some example points - drawn from exponential distribution
 values <- rexp(n=50, rate=2)
  
