@@ -29,6 +29,9 @@
 # install_github("JosephCrispell/spreadPoints")
 # library(spreadPoints)
 
+## Unload library if reinstalling
+# detach("package:spreadPoints", unload=TRUE)
+
 
 #' Add spreaded, to avoid overlap, points to a boxplot
 #'
@@ -140,6 +143,129 @@ spreadPoints <- function(values, position, pointCex=1, col="black", pch=19, alph
   # Plot the bins if requested - for testing
   if(plotBins){
     plotBins(bins, col="green")
+  }
+}
+
+#' Add spreaded, to avoid overlap, points to a boxplot
+#'
+#' This function is similar to \code{stripchart()} function except it spreads points along an axis in a deterministic rather than random manner
+#' @param data A dataframe object containing the data to be plotted
+#' @param responseColumn The name or index of the response data (Y)
+#' @param categoriesColumn The name or index of the column that categorises the response data
+#' @param pointCex A numerical value giving the amount by which plotted symbols should be magnified relative to their default. Default value is 1
+#' @param col The colour of the points to be plotted. Defaults to black
+#' @param pch The shape of the points to be plotted
+#' @param alpha The transparency (0=transparent, 1=opaque). Default value is 0.5
+#' @param plotBins Boolean parameter indicating whether the bins used to spread to points should be plotted as horizontal lines
+#' @param plotOutliers Boolean parameter indicating whether to plot outliers. Outliers are defined as those outside \code{range} * InterQuartileRange. Defaults to FALSE
+#' @param range Numerical value used to determine outliers. Default value is 1.5 - same as used by boxplot function
+#' @param horiz Boolean parameter indicating whether boxplot was plotted horizontally. Default value is FALSE
+#' @param fitToBoxWidth Boolean parameter indicating whether the points are to spread only within the width of the box. Default value is TRUE
+#' @param xpd A Boolean value or NA. If FALSE, all plotting is clipped to the plot region, if TRUE, all plotting is clipped to the figure region, and if NA, all plotting is clipped to the device region
+#' @param widthCex A numerical value giving the amount by which amount the points are spread out should be magnified relative to their default. Default value is 1
+#' @keywords points spread boxplot
+#' @export
+#' @examples 
+#' # Generate some example points - drawn from normal distribution and randomly assign them to categories
+#' ddf = data.frame(Values = rnorm(500), Category = sample(LETTERS[1:5],500,replace=T))
+#' 
+#' # Plot a boxplot of the samples from the normal distribution versus there categories - multiple boxplots
+#' boxplot(Values ~ Category, data = ddf, lwd = 2, ylab = 'NUMS')
+#' 
+#' # Plot the points for each category spread along the X axis
+#' spreadPoints(data=ddf, responseColumn="Values", categoriesColumn="Category")
+spreadPoints <- function(data, responseColumn, categoriesColumn, pointCex=1, col="black", pch=19, alpha=0.5, plotBins=FALSE,
+                         plotOutliers=FALSE, range=1.5, horiz=FALSE, fitToBoxWidth=TRUE, xpd=FALSE, widthCex=1){
+  
+  # Calculate the point size
+  ptSize <- calculatePointShapeSize(cex=pointCex)
+  
+  # Get the unique categories in the categories column
+  categories <- levels(data[, categoriesColumn])
+  
+  # Examine each of the categories within column provided
+  for(position in seq_along(categories)){
+    
+    # Define the values
+    values <- data[data[, categoriesColumn] == categories[position], responseColumn]
+    
+    # Get the whisker thresholds used for the boxplot
+    whiskerInfo <- identifyWhiskersAndOutliers(values, range)
+    
+    # If not plotting outliers - remove them
+    if(plotOutliers == FALSE){
+      values <- values[values <= whiskerInfo$Upper[1] & values >= whiskerInfo$Lower[1]]
+    }
+    
+    # Set the colour alpha
+    colour <- setAlpha(col, alpha)
+    
+    # Get the aixs limits
+    axisLimits <- par("usr")
+    
+    # Assign each of the values into a bin - the number of bins is defined by the yPad
+    bins <- cut(values, breaks = (axisLimits[4] - axisLimits[3])/ptSize[2])
+    if(horiz){
+      bins <- cut(values, breaks = (axisLimits[2] - axisLimits[1])/ptSize[2])
+    }
+    
+    # Identify the indices of the values that are present in each bin
+    indicesOfValuesInBins <- identifyValuesInBins(bins)
+    
+    # Calculate number of boxplots in current plot
+    nBoxes <- floor(axisLimits[2])
+    if(horiz){
+      nBoxes <- floor(axisLimits[4])
+    }
+    
+    # Examine each bin
+    for(key in names(indicesOfValuesInBins)){
+      
+      # Check if more than one point present
+      if(length(indicesOfValuesInBins[[key]]) > 1){
+        
+        # Note the number of points
+        nPoints <- length(indicesOfValuesInBins[[key]])
+        
+        # Calculate the space available for each point
+        # 0.8 is for when multiple plots are available - boxplot width is 80% of space available
+        # 0.4 seems to work better for a single box - I have no idea why??
+        spaceAvailable <- min(ptSize[1], (widthCex*0.8)/nPoints)
+        if(nBoxes == 1){
+          spaceAvailable <- min(ptSize[1], (widthCex*0.4)/nPoints)
+        }
+        if(fitToBoxWidth == FALSE){
+          spaceAvailable <- ptSize[1]
+        }
+        
+        # Define new X positions of each point      <-.->
+        xPositions <- seq(from=position - (0.5*nPoints*spaceAvailable), 
+                          to=position + (0.5*nPoints*spaceAvailable), 
+                          length.out=nPoints)
+        
+        # Plot the points - check if horizontal plotting
+        if(horiz){
+          points(x=values[indicesOfValuesInBins[[key]]], y=xPositions, col=colour, xpd=xpd, cex=pointCex, pch=pch)
+        }else{
+          points(x=xPositions, y=values[indicesOfValuesInBins[[key]]], col=colour, xpd=xpd, cex=pointCex, pch=pch)
+        }
+        
+        # Check if single point present  
+      }else if(length(indicesOfValuesInBins[[key]]) == 1){
+        
+        # Plot the point - check if horizontal plotting
+        if(horiz){
+          points(x=values[indicesOfValuesInBins[[key]][1]], y=position, col=colour, xpd=xpd, cex=pointCex, pch=pch)
+        }else{
+          points(x=position, y=values[indicesOfValuesInBins[[key]][1]], col=colour, xpd=xpd, cex=pointCex, pch=pch)
+        }
+      }
+    }
+    
+    # Plot the bins if requested - for testing
+    if(plotBins){
+      plotBins(bins, col="green")
+    }
   }
 }
 
