@@ -177,9 +177,6 @@ spreadPoints <- function(values, position, pointCex=1, col="black", pch=19, alph
 spreadPointsMultiple <- function(data, responseColumn, categoriesColumn, pointCex=1, col="black", pch=19, alpha=0.5, plotBins=FALSE,
                                  plotOutliers=FALSE, range=1.5, horiz=FALSE, fitToBoxWidth=TRUE, xpd=FALSE, widthCex=1){
   
-  # Calculate the point size
-  ptSize <- calculatePointShapeSize(cex=pointCex)
-  
   # Get the unique categories in the categories column
   categories <- levels(data[, categoriesColumn])
   
@@ -190,8 +187,8 @@ spreadPointsMultiple <- function(data, responseColumn, categoriesColumn, pointCe
     values <- data[data[, categoriesColumn] == categories[position], responseColumn]
     
     # Plot the points over the current boxplot
-    spreadPoints(values, position, pointCex, col, pch, alpha, plotBins, plotOutliers,
-                 range=, horiz, fitToBoxWidth, xpd, widthCex)
+    spreadPoints(values, position=position, pointCex, col, pch, alpha, plotBins, plotOutliers,
+                 range, horiz, fitToBoxWidth, xpd, widthCex)
   }    
 }
 
