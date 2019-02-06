@@ -170,7 +170,7 @@ spreadPoints <- function(values, position, pointCex=1, col="black", pch=19, alph
 #' randomSamples = data.frame(Values = rnorm(500), Category = sample(c('A', 'B', 'C', 'D', 'E'), size=500, replace=TRUE))
 #' 
 #' # Plot a boxplot of the samples from the normal distribution versus there categories - multiple boxplots
-#' boxplot(Values ~ Category, data = randomSamples, lwd = 2, ylab = 'NUMS')
+#' boxplot(Values ~ Category, data = randomSamples, lwd = 2)
 #' 
 #' # Plot the points for each category spread along the X axis
 #' spreadPointsMultiple(data=randomSamples, responseColumn="Values", categoriesColumn="Category")
