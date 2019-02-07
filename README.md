@@ -36,7 +36,7 @@ If you've plotted multiple boxplots, you can call `spreadPoints()` multiple time
 set.seed(254534)
 
 # Generate some example points - drawn from normal distribution and randomly assign them to categories
-randomSamples = data.frame(Values = rnorm(500), Category = sample(c('A', 'B', 'C', 'D', 'E'), size=500, replace=TRUE))
+randomSamples <- data.frame(Values = rnorm(500), Category = sample(c('A', 'B', 'C', 'D', 'E'), size=500, replace=TRUE))
  
 # Plot a boxplot of the samples from the normal distribution versus there categories - multiple boxplots
 boxplot(Values ~ Category, data = randomSamples, lwd = 2)
