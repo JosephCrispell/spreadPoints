@@ -1,4 +1,4 @@
-# spreadPoints
+# spreadPoints (DEPRECATED - NOW AVAILABLE MAINTAINED IN `plotteR`)
 ## Author: Joseph Crispell
 ## Repository created: 05-02-19
 ## Licence: GPL-3
