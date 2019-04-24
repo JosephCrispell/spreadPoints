@@ -2,3 +2,7 @@
 
 export(spreadPoints)
 export(spreadPointsMultiple)
+
+.onLoad <- function(...) {
+      packageStartupMessage("Warning: package deprecated. spreadPoints function now available in plotteR package.")
+}
